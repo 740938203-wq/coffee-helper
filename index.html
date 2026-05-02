@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心青年咖啡助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .page {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .page.active {
+            display: block;
+        }
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        h3 {
+            font-size: 20px;
+            color: #555;
+            margin: 15px 0 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-voice {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+        }
+        .btn-repeat {
+            background: #007bff;
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+        }
+        .btn-complete {
+            background: #28a745;
+            color: white;
+            padding: 18px 45px;
+            font-size: 22px;
+            border-radius: 50px;
+        }
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .btn-help {
+            background: #ff9800;
+            color: white;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 50px;
+        }
+        .btn-intervention {
+            background: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .safety-alert {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .safety-alert strong {
+            color: #dc3545;
+            font-size: 18px;
+        }
+        .timeout-alert {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            text-align: center;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 3px solid #667eea;
+        }
+        .step-number {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .step-text {
+            font-size: 24px;
+            line-height: 1.6;
+            color: #333;
+            margin: 15px 0;
+        }
+        .step-image {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            background: #e9ecef;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px auto;
+            font-size: 80px;
+        }
+        .progress-bar {
+            background: #e9ecef;
+            height: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s;
+            border-radius: 12px;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .level-L1 { background: #f8d7da; color: #dc3545; }
+        .level-L2 { background: #fff3cd; color: #856404; }
+        .level-L3 { background: #cce5ff; color: #004085; }
+        .level-L4 { background: #d4edda; color: #155724; }
+        .level-L5 { background: #e2e3e5; color: #383d41; }
+        .level-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        .level-option {
+            padding: 20px 30px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            min-width: 140px;
+        }
+        .level-option:hover, .level-option.selected {
+            border-color: #667eea;
+            background: #e9ecef;
+            transform: scale(1.03);
+        }
+        .level-option .level-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .level-option .level-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .center-buttons {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .description-box {
+            background: #e7f3ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+        .student-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .student-card:hover {
+            border-color: #667eea;
+        }
+        .student-info h4 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .student-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+        .stat-item.highlight {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .data-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        .data-card .number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .data-card .label {
+            font-size: 16px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .chart-placeholder {
+            background: linear-gradient(180deg, #e9ecef 0%, #fff 100%);
+            border-radius: 10px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #666;
+            font-size: 18px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .scene-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+        .scene-card:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .scene-card.future {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .scene-card.future:hover {
+            transform: none;
+        }
+        .scene-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .scene-card .future-tag {
+            display: inline-block;
+            background: #6c757d;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 18px;
+            color: #666;
+        }
+        .tab:hover, .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        .error-list {
+            background: #f8d7da;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .error-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f5c6cb;
+        }
+        .liquid-indicator {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            background: #e9ecef;
+            border-radius: 15px;
+            margin: 20px auto;
+            position: relative;
+            border: 3px solid #667eea;
+            overflow: hidden;
+        }
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            transition: height 0.5s;
+        }
+        .liquid-warning {
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            border-bottom: 3px dashed #dc3545;
+            color: #dc3545;
+            font-size: 14px;
+            text-align: center;
+            padding: 5px;
+        }
+        .liquid-target {
+            position: absolute;
+            bottom: 150px;
+            left: 0;
+            right: 0;
+            border-bottom: 3px dashed #28a745;
+            color: #28a745;
+            font-size: 14px;
+            text-align: center;
+            padding: 5px;
+        }
+        .microphone-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+            z-index: 1000;
+        }
+        .microphone-btn:hover {
+            transform: scale(1.1);
+        }
+        .voice-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .voice-btn {
+            padding: 20px;
+            font-size: 18px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .voice-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        .assessment-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+        }
+        .assessment-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .assessment-option {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .assessment-option:hover, .assessment-option.selected {
+            border-color: #667eea;
+            background: #e9ecef;
+        }
+        .step-level-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .intervention-history {
+            background: #fff3cd;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .step-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .detail-item {
+            font-size: 14px;
+            padding: 5px 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .detail-item.risk-high {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .detail-item.risk-medium {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+            font-weight: bold;
+        }
+        .quality-standards {
+            margin: 10px 0;
+            padding: 10px;
+            background: #d4edda;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .prevention-tip {
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page active" id="home">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 80px; margin-bottom: 10px;">☕</div>
+            </div>
+            <h1>心青年咖啡助手</h1>
+            <div style="text-align: center; color: #666; margin-bottom: 20px;">
+                <p style="font-size: 16px;">心智障碍青年咖啡制作辅助与能力评估系统</p>
+            </div>
+            <div class="description-box">
+                <p style="text-align: center; font-size: 16px;">面向心青年职业训练的语音引导、渐进辅助与成长评估系统</p>
+            </div>
+            <div class="warning-box">
+                <strong>⚠️ 使用提醒：</strong>
+                <p style="margin-top: 10px;">请在老师或支持者陪同下使用本工具！</p>
+                <p style="margin-top: 5px;">本工具是学习辅助工具，不能替代老师现场支持和安全看护。</p>
+            </div>
+            <div class="center-buttons" style="margin-top: 30px;">
+                <button class="btn btn-primary" onclick="showPage('assessment')" style="padding: 25px 40px; font-size: 22px;">
+                    📋 开始能力评估
+                </button>
+                <button class="btn btn-secondary" onclick="showPage('sceneSelect')" style="padding: 25px 40px; font-size: 22px;">
+                    🎯 直接开始训练
+                </button>
+            </div>
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px dashed #eee;">
+                <button class="btn btn-small" onclick="showPage('teacher')" style="background: transparent; color: #667eea; border: 2px dashed #667eea; padding: 15px 30px;">
+                    👨‍🏫 老师入口
+                </button>
+                <button class="btn btn-small" onclick="showPage('dashboard')" style="background: transparent; color: #667eea; border: 2px dashed #667eea; padding: 15px 30px; margin-left: 10px;">
+                    📊 数据看板
+                </button>
+            </div>
+        </div>
+
+        <div class="page" id="assessment">
+            <h2>📋 初始能力评估量表</h2>
+            <div class="description-box">
+                <p>请老师根据心青年近期表现完成以下评估，系统将推荐合适的初始训练等级。</p>
+            </div>
+            <div id="assessmentQuestions"></div>
+            <div class="center-buttons">
+                <button class="btn btn-primary" onclick="completeAssessment()">✅ 完成评估，推荐等级</button>
+                <button class="btn btn-secondary" onclick="showPage('home')">返回</button>
+            </div>
+        </div>
+
+        <div class="page" id="sceneSelect">
+            <h2>选择训练场景</h2>
+            <div class="description-box">
+                <p>请选择本次训练的场景：</p>
+            </div>
+            <div class="scene-card" onclick="selectScene('preparation')">
+                <h4>🧼 场景一：训练前准备</h4>
+                <p>洗手、佩戴装备、检查设备、准备工具</p>
+            </div>
+            <div class="scene-card" onclick="selectScene('makeCoffee')">
+                <h4>☕ 场景二：美式咖啡制作</h4>
+                <p>研磨、布粉、压粉、萃取、加水、出品</p>
+            </div>
+            <div class="scene-card future">
+                <h4>💬 场景三：顾客点单 <span class="future-tag">远期扩展</span></h4>
+                <p>接收点单、确认订单、礼貌回应</p>
+            </div>
+            <div class="scene-card future">
+                <h4>📱 场景四：扫码支付 <span class="future-tag">远期扩展</span></h4>
+                <p>引导付款、确认支付、订单核对</p>
+            </div>
+            <div class="center-buttons" style="margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="try { showPage('home'); } catch(e) { console.error('返回首页失败:', e); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('home').classList.add('active'); }">返回首页</button>
+            </div>
+        </div>
+
+        <div class="page" id="levelSelect">
+            <h2>选择训练等级</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">根据学员能力选择合适的辅助等级</p>
+            <div id="recommendedLevel" style="display: none; margin-bottom: 20px;">
+                <div class="description-box" style="background: #d4edda;">
+                    <p style="text-align: center; font-weight: bold; color: #155724;">💡 系统推荐等级：<span id="recommendedLevelText"></span></p>
+                </div>
+            </div>
+            <div class="level-selector">
+                <div class="level-option" onclick="selectLevel(1)">
+                    <div class="level-title">L1</div>
+                    <div class="level-desc">高度依赖</div>
+                    <div style="font-size: 12px; color: #dc3545; margin-top: 5px;">全程需要老师辅助</div>
+                </div>
+                <div class="level-option" onclick="selectLevel(2)">
+                    <div class="level-title">L2</div>
+                    <div class="level-desc">较多辅助</div>
+                    <div style="font-size: 12px; color: #856404; margin-top: 5px;">需要分步提示</div>
+                </div>
+                <div class="level-option" onclick="selectLevel(3)">
+                    <div class="level-title">L3</div>
+                    <div class="level-desc">半独立</div>
+                    <div style="font-size: 12px; color: #004085; margin-top: 5px;">偶尔需要提示</div>
+                </div>
+                <div class="level-option" onclick="selectLevel(4)">
+                    <div class="level-title">L4</div>
+                    <div class="level-desc">少量辅助</div>
+                    <div style="font-size: 12px; color: #155724; margin-top: 5px;">基本可以独立</div>
+                </div>
+                <div class="level-option" onclick="selectLevel(5)">
+                    <div class="level-title">L5</div>
+                    <div class="level-desc">基本独立</div>
+                    <div style="font-size: 12px; color: #383d41; margin-top: 5px;">接近真实岗位</div>
+                </div>
+            </div>
+            <div class="center-buttons" style="margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="showPage('sceneSelect')">上一步</button>
+            </div>
+        </div>
+
+        <div class="page" id="steps">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <h2 id="sceneTitle" style="margin: 0;">美式咖啡制作</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="level-badge" id="currentLevelBadge">L1</span>
+                    <button class="btn-intervention" onclick="recordIntervention()">⚠️ 记录老师干预</button>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p style="text-align: center; font-size: 18px; margin-bottom: 10px;">
+                步骤 <span id="currentStepNum">1</span> / <span id="totalSteps">16</span>
+                <span style="font-size: 14px; color: #666; margin-left: 10px;">
+                    ⏱️ 已用时间：<span id="stepTimer">0</span> 秒
+                </span>
+            </p>
+            <div id="timeoutAlert" style="display: none;" class="timeout-alert">
+                <strong>⏰ 时间提醒</strong>
+                <p>已超过 3 分钟，建议老师关注！</p>
+            </div>
+            <div id="stepContent"></div>
+            <div class="center-buttons">
+                <button class="btn btn-help" onclick="requestHelp()">🆘 请老师帮忙</button>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">⬅️ 上一步</button>
+                <button class="btn btn-warning" onclick="skipStep()">⏭️ 跳过此步</button>
+                <button class="btn btn-secondary" onclick="showPage('sceneSelect')">返回</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <h3 style="font-size: 16px; color: #666; text-align: center; margin-bottom: 10px;">🔊 语音快捷按钮（噪音环境备选方案）</h3>
+                <div class="voice-buttons-grid">
+                    <button class="voice-btn" onclick="handleVoiceButton('next')">🎯 下一步是什么</button>
+                    <button class="voice-btn" onclick="handleVoiceButton('repeat')">🔄 再说一遍</button>
+                    <button class="voice-btn" onclick="handleVoiceButton('cant')">😟 我不会</button>
+                    <button class="voice-btn" onclick="handleVoiceButton('help')">🆘 请老师帮忙</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="liquidDetection">
+            <h2>💧 液位检测（演示功能）</h2>
+            <div class="description-box" style="background: #e7f3ff;">
+                <p style="text-align: center;">📢 此功能为演示版本，展示时使用模拟效果</p>
+                <p style="text-align: center; font-size: 14px; color: #666;">实际产品中需要专业摄像头和硬件方案</p>
+            </div>
+            <p style="text-align: center; color: #666;">实时监控咖啡杯液位</p>
+            <div class="liquid-indicator">
+                <div class="liquid" id="liquidLevel" style="height: 0%"></div>
+                <div class="liquid-warning">⚠️ 小心！快满了！</div>
+                <div class="liquid-target">✓ 目标液位</div>
+            </div>
+            <div class="center-buttons">
+                <button class="btn btn-primary" onclick="simulateLiquid()">模拟液位上升</button>
+                <button class="btn btn-secondary" onclick="resetLiquid()">重置液位</button>
+            </div>
+            <div class="center-buttons" style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="showPage('steps')">返回步骤</button>
+            </div>
+        </div>
+
+        <div class="page" id="complete">
+            <h2>🎉 太棒了！</h2>
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="font-size: 24px; margin-bottom: 20px;">你完成了本次训练！</p>
+                <div style="font-size: 80px; margin: 30px 0;">☕✨</div>
+            </div>
+            <div id="trainingSummary"></div>
+            <div class="center-buttons">
+                <button class="btn btn-primary" onclick="resetTraining()">再来一次</button>
+            </div>
+            <div class="center-buttons" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="testGoHome()">测试返回首页</button>
+                <button class="btn btn-secondary" onclick="try { console.log('点击返回首页'); showPage('home'); } catch(e) { console.error('返回首页失败:', e); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('home').classList.add('active'); }">返回首页</button>
+            </div>
+        </div>
+
+        <div class="page" id="teacher">
+            <h2>👨‍🏫 老师端</h2>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTeacherTab('students')">学员列表</div>
+                <div class="tab" onclick="switchTeacherTab('intervention')">干预记录</div>
+                <div class="tab" onclick="switchTeacherTab('suggestions')">训练建议</div>
+            </div>
+            <div id="teacherContent"></div>
+            <div class="center-buttons" style="margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="try { showPage('home'); } catch(e) { console.error('返回首页失败:', e); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('home').classList.add('active'); }">返回首页</button>
+            </div>
+        </div>
+
+        <div class="page" id="dashboard">
+            <h2>📊 数据看板</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="number">156</div>
+                    <div class="label">总训练次数</div>
+                </div>
+                <div class="data-card">
+                    <div class="number">78%</div>
+                    <div class="label">平均独立完成率</div>
+                </div>
+                <div class="data-card">
+                    <div class="number">12分</div>
+                    <div class="label">平均完成时间</div>
+                </div>
+                <div class="data-card">
+                    <div class="number">3.2次</div>
+                    <div class="label">平均干预次数</div>
+                </div>
+                <div class="data-card">
+                    <div class="number">7天</div>
+                    <div class="label">连续训练天数</div>
+                </div>
+            </div>
+            <h3>本周训练趋势</h3>
+            <div class="chart-placeholder">
+                📈 训练完成率和干预次数趋势图
+            </div>
+            <h3>常错步骤排行</h3>
+            <div class="error-list">
+                <div class="error-item">
+                    <span>1. 挂手柄</span>
+                    <span style="color: #dc3545;">错误率 23%</span>
+                </div>
+                <div class="error-item">
+                    <span>2. 压粉</span>
+                    <span style="color: #dc3545;">错误率 18%</span>
+                </div>
+                <div class="error-item">
+                    <span>3. 液位控制</span>
+                    <span style="color: #ffc107;">错误率 15%</span>
+                </div>
+                <div class="error-item">
+                    <span>4. 布粉</span>
+                    <span style="color: #28a745;">错误率 12%</span>
+                </div>
+            </div>
+            <h3>L1-L5 等级分布</h3>
+            <div class="data-grid">
+                <div class="data-card" style="background: #f8d7da;">
+                    <div class="number" style="color: #dc3545;">2</div>
+                    <div class="label">L1 高度依赖</div>
+                </div>
+                <div class="data-card" style="background: #fff3cd;">
+                    <div class="number" style="color: #856404;">3</div>
+                    <div class="label">L2 较多辅助</div>
+                </div>
+                <div class="data-card" style="background: #cce5ff;">
+                    <div class="number" style="color: #004085;">5</div>
+                    <div class="label">L3 半独立</div>
+                </div>
+                <div class="data-card" style="background: #d4edda;">
+                    <div class="number" style="color: #155724;">4</div>
+                    <div class="label">L4/L5 独立</div>
+                </div>
+            </div>
+            <div class="center-buttons" style="margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="try { showPage('home'); } catch(e) { console.error('返回首页失败:', e); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('home').classList.add('active'); }">返回首页</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="microphone-btn" onclick="startVoiceInput()" title="语音输入">🎤</button>
+
+    <script>
+        let currentPage = 'home';
+        let currentScene = 'makeCoffee';
+        let currentLevel = 1;
+        let currentStep = 0;
+        let completedSteps = new Set();
+        let skippedSteps = new Set();
+        let trainingData = {
+            startTime: null,
+            stepStartTime: null,
+            steps: [],
+            interventions: 0,
+            errors: 0,
+            trainingDate: new Date().toISOString().split('T')[0],
+            sessionHistory: []
+        };
+        let stepTimerInterval = null;
+        let stepSeconds = 0;
+        let timeoutShown = false;
+        let assessmentAnswers = {};
+        let interventionHistory = [];
+        let liquidLevel = 0;
+
+        const assessmentQuestions = [
+            { id: 'stepMemory', text: '对制作步骤的记忆能力', options: ['完全不记得', '需要多次提醒', '偶尔需要提醒', '基本记住', '完全记住'] },
+            { id: 'motorSkill', text: '精细动作（挂手柄、压粉等）', options: ['完全无法完成', '需要手把手辅助', '需要示范', '基本能独立完成', '完全独立完成'] },
+            { id: 'attention', text: '注意力维持时间', options: ['1-2分钟', '3-5分钟', '5-10分钟', '10-20分钟', '20分钟以上'] },
+            { id: 'helpSeeking', text: '遇到困难时主动求助意愿', options: ['从不求助', '需要提醒才会求助', '有时会求助', '经常主动求助', '遇到困难立即求助'] },
+            { id: 'independence', text: '整体独立性', options: ['完全依赖', '需要较多辅助', '需要一些辅助', '基本独立', '完全独立'] }
+        ];
+
+        const scenes = {
+            preparation: {
+                name: '训练前准备',
+                steps: [
+                    { num: 1, icon: '🧼', text: '检查指甲卫生', easyText: '看看指甲长不长，指甲要剪短。', safety: null, stepLevel: 3 },
+                    { num: 2, icon: '🚿', text: '洗手', easyText: '用洗手液把手洗干净，冲干净擦干。', safety: null, stepLevel: 2 },
+                    { num: 3, icon: '🖐️', text: '检查手部卫生', easyText: '手干净吗？有没有脏东西？', safety: null, stepLevel: 2 },
+                    { num: 4, icon: '👔', text: '佩戴围裙', easyText: '把围裙系好，带子绑紧。', safety: null, stepLevel: 2 },
+                    { num: 5, icon: '👒', text: '佩戴帽子', easyText: '把帽子戴正，头发要塞进帽子里。', safety: null, stepLevel: 2 },
+                    { num: 6, icon: '😷', text: '佩戴口罩', easyText: '把口罩戴好，鼻子和嘴都要盖住。', safety: '⚠️ 口罩要戴好！', voice: '佩戴口罩', stepLevel: 2 },
+                    { num: 7, icon: '💧', text: '检查咖啡机水箱', easyText: '看看水箱有没有水。没有水要告诉老师。', safety: null, voice: '检查咖啡机水箱', stepLevel: 3 },
+                    { num: 8, icon: '☕', text: '检查豆仓', easyText: '看看豆仓有没有咖啡豆。没有豆子要告诉老师。', safety: null, voice: '检查豆仓', stepLevel: 3 },
+                    { num: 9, icon: '🔌', text: '检查电源', easyText: '看看咖啡机是不是插着电。', safety: null, voice: '检查电源', stepLevel: 3 },
+                    { num: 10, icon: '🥤', text: '准备咖啡杯和工具', easyText: '把杯子摆好，摆整齐。', safety: null, voice: '准备咖啡杯和工具', stepLevel: 2 }
+                ]
+            },
+            makeCoffee: {
+                name: '美式咖啡制作',
+                steps: [
+                    { num: 1, icon: '👋', phase: '准备与卫生', text: '取下手柄并清洁粉碗', easyText: '从萃取头取下手柄。如果里面有旧咖啡饼，先敲掉。用干净抹布擦干粉碗，避免残粉和水影响萃取。', safety: '⚠️ 小心手柄！', voice: '取下手柄并清洁粉碗', stepLevel: 2, duration: '5-10秒', tool: '萃取手柄、抹布', qualityOk: '粉碗干净、无残粉、干燥', qualityFail: '有残粉或水', riskLevel: '中', prevention: '用干净抹布擦干' },
+                    { num: 2, icon: '⚙️', phase: '准备与卫生', text: '检查设备与工具', easyText: '检查咖啡机电源、水箱、豆仓。准备手柄、粉碗、粉锤、布粉器、咖啡杯。确认咖啡机已预热。', safety: null, voice: '检查设备与工具', stepLevel: 3, duration: '10-15秒', tool: '咖啡机、工具', qualityOk: '设备正常、工具准备齐全', qualityFail: '设备未检查、工具缺失', riskLevel: '中', prevention: '逐项检查确认' },
+                    { num: 3, icon: '🧼', phase: '准备与卫生', text: '保持操作台干净', easyText: '检查操作台是否干净整洁，有污渍要先清理。', safety: null, voice: '保持操作台干净', stepLevel: 2, duration: '5-8秒', tool: '无', qualityOk: '操作台干净整洁', qualityFail: '有污渍或杂物', riskLevel: '低', prevention: '先清理再继续' },
+                    { num: 4, icon: '☕', phase: '制作阶段', text: '研磨咖啡粉', easyText: '将手柄放到磨豆机接粉位置。按下研磨键。接取定量咖啡粉。', safety: null, voice: '研磨咖啡粉', stepLevel: 3, duration: '10-15秒', tool: '磨豆机、手柄', qualityOk: '接取定量咖啡粉', qualityFail: '粉量过多或过少', riskLevel: '中', prevention: '磨豆机声响注意' },
+                    { num: 5, icon: '⚖️', phase: '制作阶段', text: '确认粉量', easyText: '检查粉量是否合适。标准流程会用电子秤确认粉量。教学场景可以先由老师确认。', safety: null, voice: '确认粉量', stepLevel: 3, duration: '5-8秒', tool: '电子秤（可选）', qualityOk: '粉量合适', qualityFail: '粉量偏差大', riskLevel: '低', prevention: '请老师确认粉量' },
+                    { num: 6, icon: '👋', phase: '制作阶段', text: '整理咖啡粉表面', easyText: '轻轻拍平或整理咖啡粉。让咖啡粉尽量均匀分布在粉碗里。', safety: null, voice: '整理咖啡粉表面', stepLevel: 2, duration: '5-8秒', tool: '无', qualityOk: '咖啡粉表面平整', qualityFail: '粉面不平整', riskLevel: '低', prevention: '轻轻拍平' },
+                    { num: 7, icon: '🔄', phase: '制作阶段', text: '使用布粉器', easyText: '把布粉器平稳放在粉碗上。顺时针旋转，让咖啡粉分布更均匀。', safety: null, voice: '使用布粉器', stepLevel: 2, duration: '8-10秒', tool: '布粉器', qualityOk: '布粉均匀', qualityFail: '粉面不均匀', riskLevel: '中', prevention: '平稳放置布粉器' },
+                    { num: 8, icon: '🔨', phase: '制作阶段', text: '使用粉锤压粉', easyText: '粉锤垂直放下。稳定向下压实。重点是"平、稳、直"，不要歪。', safety: null, voice: '使用粉锤压粉', stepLevel: 2, duration: '10-12秒', tool: '粉锤', qualityOk: '粉饼平整、垂直', qualityFail: '粉饼歪斜', riskLevel: '中', prevention: '保持垂直、平稳压实' },
+                    { num: 9, icon: '💧', phase: '制作阶段', text: '冲洗萃取头', easyText: '按一下冲泡键，放水约2-3秒。作用是冲掉残留咖啡粉，也让水温更稳定。这一步专业流程里很常见，但教学时要由老师确认安全。', safety: '⚠️ 由老师操作！水温很高！', voice: '冲洗萃取头', stepLevel: 1, duration: '2-3秒', tool: '咖啡机', qualityOk: '冲掉残粉、水温稳定', qualityFail: '未冲洗', riskLevel: '高', prevention: '由老师确认安全' },
+                    { num: 10, icon: '🪝', phase: '制作阶段', text: '装上手柄', easyText: '把手柄卡进萃取头凹槽。旋转到正中或锁紧位置。动作要稳，避免碰撞粉饼。', safety: '⚠️ 手柄要锁好！', voice: '装上手柄', stepLevel: 2, duration: '8-10秒', tool: '萃取手柄', qualityOk: '手柄锁定牢固', qualityFail: '未锁紧、碰撞粉饼', riskLevel: '高', prevention: '确认手柄锁好' },
+                    { num: 11, icon: '🥤', phase: '制作阶段', text: '放好咖啡杯', easyText: '把杯子放在咖啡液出口正下方。如果使用电子秤，可把杯子放在秤上再归零。', safety: null, voice: '放好咖啡杯', stepLevel: 3, duration: '5-8秒', tool: '咖啡杯', qualityOk: '杯子放正、位置对准', qualityFail: '位置不对', riskLevel: '低', prevention: '仔细对准' },
+                    { num: 12, icon: '▶️', phase: '制作阶段', text: '开始萃取', easyText: '按下"冲泡键"。观察咖啡液是否流入杯中。不要反复按键，不要移动杯子。', safety: '⚠️ 不要碰咖啡机！', voice: '开始萃取', stepLevel: 3, duration: '3-5秒', tool: '咖啡机', qualityOk: '咖啡液顺利流出', qualityFail: '无反应', riskLevel: '中', prevention: '按键一次即可' },
+                    { num: 13, icon: '⏳', phase: '制作阶段', text: '结束萃取', easyText: '达到设定量或设定时间后停止。常见参考是约25-30秒左右，但不同豆子和机器会调整。', safety: null, voice: '结束萃取', stepLevel: 3, duration: '25-30秒', tool: '咖啡机', qualityOk: '萃取正常结束', qualityFail: '提前停止或超时', riskLevel: '中', prevention: '观察时间和量' },
+                    { num: 14, icon: '🥛', phase: '制作阶段', text: '取出咖啡杯', easyText: '慢慢拿出杯子。注意咖啡液温度较高，小心烫。', safety: '⚠️ 小心烫手！', voice: '取出咖啡杯', stepLevel: 3, duration: '5-8秒', tool: '咖啡杯', qualityOk: '平稳取出、无洒出', qualityFail: '洒出、不稳', riskLevel: '中', prevention: '慢慢拿、用毛巾或杯套' },
+                    { num: 15, icon: '💧', phase: '制作阶段', text: '制作美式咖啡', easyText: '如果目标是美式咖啡，再加入定量热水。热水步骤建议保留老师辅助或监督。', safety: '⚠️ 热水很烫！请老师帮忙！', voice: '制作美式咖啡', stepLevel: 1, duration: '10-15秒', tool: '热水壶', qualityOk: '热水量合适', qualityFail: '水量过多或过少', riskLevel: '高', prevention: '老师辅助或监督' },
+                    { num: 16, icon: '🤝', phase: '制作阶段', text: '出餐交接', easyText: '把咖啡交给出餐员。可以练习说："请出餐"。', safety: null, voice: '出餐交接', stepLevel: 4, duration: '5-8秒', tool: '无', qualityOk: '平稳交接', qualityFail: '洒出', riskLevel: '低', prevention: '平稳递出' },
+                    { num: 17, icon: '🪝', phase: '清洁整理', text: '卸下手柄', easyText: '确认萃取结束后，慢慢旋转卸下手柄。注意手柄和萃取头可能较热。', safety: '⚠️ 小心烫手！', voice: '卸下手柄', stepLevel: 2, duration: '5-8秒', tool: '萃取手柄', qualityOk: '平稳卸下', qualityFail: '碰撞', riskLevel: '中', prevention: '慢慢旋转' },
+                    { num: 18, icon: '💀', phase: '清洁整理', text: '敲掉咖啡饼', easyText: '对准粉渣盒。把咖啡饼敲入粉渣盒。', safety: null, voice: '敲掉咖啡饼', stepLevel: 2, duration: '5-8秒', tool: '粉渣盒', qualityOk: '咖啡饼入盒', qualityFail: '洒出粉渣', riskLevel: '低', prevention: '对准粉渣盒' },
+                    { num: 19, icon: '🧹', phase: '清洁整理', text: '清洁粉碗和手柄', easyText: '擦掉残粉。保持粉碗干净、干燥。', safety: null, voice: '清洁粉碗和手柄', stepLevel: 2, duration: '8-10秒', tool: '抹布', qualityOk: '粉碗干净干燥', qualityFail: '有残粉', riskLevel: '低', prevention: '仔细擦拭' },
+                    { num: 20, icon: '🧼', phase: '清洁整理', text: '清洁台面，准备下一杯', easyText: '擦拭操作区域。工具归位。准备下一次制作。', safety: null, voice: '清洁台面，准备下一杯', stepLevel: 3, duration: '15-20秒', tool: '抹布', qualityOk: '台面干净、工具归位', qualityFail: '台面脏乱、工具乱放', riskLevel: '低', prevention: '养成整理习惯' }
+                ]
+            }
+        };
+
+        const students = [
+            { id: 1, name: '小明', level: 2, totalTrained: 45, successRate: 72, avgTime: '14分钟', trend: '↑', consecutiveDays: 5 },
+            { id: 2, name: '小红', level: 3, totalTrained: 62, successRate: 85, avgTime: '11分钟', trend: '↑', consecutiveDays: 8 },
+            { id: 3, name: '小华', level: 1, totalTrained: 28, successRate: 45, avgTime: '18分钟', trend: '→', consecutiveDays: 3 },
+            { id: 4, name: '小丽', level: 4, totalTrained: 78, successRate: 92, avgTime: '10分钟', trend: '↑', consecutiveDays: 12 },
+            { id: 5, name: '小刚', level: 2, totalTrained: 35, successRate: 68, avgTime: '15分钟', trend: '↑', consecutiveDays: 7 }
+        ];
+
+        function showPage(pageId) {
+            console.log('showPage被调用，目标页面：', pageId);
+            
+            try {
+                if (stepTimerInterval) {
+                    clearInterval(stepTimerInterval);
+                    stepTimerInterval = null;
+                }
+                try {
+                    if ('speechSynthesis' in window && speechSynthesis) {
+                        speechSynthesis.cancel();
+                    }
+                } catch (e) {
+                    console.log('语音取消失败：', e);
+                }
+                
+                const pages = document.querySelectorAll('.page');
+                console.log('找到页面数量：', pages.length);
+                
+                pages.forEach(p => p.classList.remove('active'));
+                
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    currentPage = pageId;
+                    console.log('成功切换到页面：', pageId);
+                    
+                    if (pageId === 'teacher') {
+                        renderTeacherContent('students');
+                    } else if (pageId === 'assessment') {
+                        renderAssessmentQuestions();
+                    }
+                } else {
+                    console.error('找不到目标页面：', pageId);
+                }
+            } catch (error) {
+                console.error('showPage出错：', error);
+            }
+        }
+
+        function renderAssessmentQuestions() {
+            const container = document.getElementById('assessmentQuestions');
+            assessmentAnswers = {};
+            let html = '';
+            assessmentQuestions.forEach(question => {
+                html += `
+                    <div class="assessment-item">
+                        <p style="font-weight: bold; font-size: 18px;">${question.text}</p>
+                        <div class="assessment-options">
+                            ${question.options.map((opt, idx) => `
+                                <div class="assessment-option" onclick="selectAssessmentAnswer('${question.id}', ${idx}, this)">
+                                    ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectAssessmentAnswer(questionId, score, element) {
+            assessmentAnswers[questionId] = score;
+            const parent = element.parentElement;
+            parent.querySelectorAll('.assessment-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function completeAssessment() {
+            if (Object.keys(assessmentAnswers).length < assessmentQuestions.length) {
+                alert('请完成所有评估问题！');
+                return;
+            }
+            const totalScore = Object.values(assessmentAnswers).reduce((a, b) => a + b, 0);
+            const avgScore = totalScore / assessmentQuestions.length;
+            let recommendedLevel;
+            if (avgScore <= 1) recommendedLevel = 1;
+            else if (avgScore <= 2) recommendedLevel = 2;
+            else if (avgScore <= 3) recommendedLevel = 3;
+            else if (avgScore <= 4) recommendedLevel = 4;
+            else recommendedLevel = 5;
+            document.getElementById('recommendedLevel').style.display = 'block';
+            document.getElementById('recommendedLevelText').textContent = 'L' + recommendedLevel;
+            currentLevel = recommendedLevel;
+            showPage('levelSelect');
+        }
+
+        function switchTeacherTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTeacherContent(tab);
+        }
+
+        function renderTeacherContent(tab) {
+            const content = document.getElementById('teacherContent');
+            if (tab === 'students') {
+                let html = '<h3>学员列表</h3>';
+                students.forEach(student => {
+                    const levelClass = `level-L${student.level}`;
+                    html += `
+                        <div class="student-card">
+                            <div class="student-info">
+                                <h4>${student.name}</h4>
+                                <div class="student-stats">
+                                    <span class="level-badge ${levelClass}">L${student.level}</span>
+                                    <span class="stat-item">训练 ${student.totalTrained} 次</span>
+                                    <span class="stat-item ${student.successRate >= 80 ? 'highlight' : ''}">完成率 ${student.successRate}%</span>
+                                    <span class="stat-item">平均 ${student.avgTime}</span>
+                                    <span class="stat-item">🔥 连续 ${student.consecutiveDays} 天</span>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="editStudent(${student.id})">设置等级</button>
+                                <button class="btn btn-primary btn-small" onclick="viewStudent(${student.id})">查看详情</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                content.innerHTML = html;
+            } else if (tab === 'intervention') {
+                let html = '<h3>干预记录</h3>';
+                if (interventionHistory.length > 0) {
+                    html += '<div class="intervention-history">';
+                    interventionHistory.slice().reverse().forEach(record => {
+                        html += `<p>🕐 ${record.time} - ${record.type} (步骤 ${record.step})</p>`;
+                    });
+                    html += '</div>';
+                } else {
+                    html += '<p style="text-align: center; color: #666;">暂无干预记录</p>';
+                }
+                html += '<div style="margin-top: 20px;">';
+                students.forEach(student => {
+                    html += `
+                        <div class="student-card">
+                            <div class="student-info">
+                                <h4>${student.name} <span class="level-badge level-L${student.level}">L${student.level}</span></h4>
+                                <div class="student-stats">
+                                    <span class="stat-item">今日干预: 3次</span>
+                                    <span class="stat-item">本周干预: 12次</span>
+                                    <span class="stat-item">主要干预点: 挂手柄、液位控制</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="viewInterventions(${student.id})">查看记录</button>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                content.innerHTML = html;
+            } else if (tab === 'suggestions') {
+                let html = '<h3>训练建议</h3>';
+                html += `
+                    <div class="description-box" style="background: #d4edda; border-left-color: #28a745;">
+                        <h4 style="color: #155724;">🎉 升级建议</h4>
+                        <p><strong>小明</strong> 已连续 10 次完成 L2 模式训练，错误率低于 10%，建议尝试 L3 半独立模式。</p>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">注：10 次成功升级、3 次失败降级的阈值为初始设定值，将根据测试数据调整</p>
+                        <button class="btn btn-success btn-small" style="margin-top: 10px;">确认升级</button>
+                    </div>
+                    <div class="description-box" style="background: #f8d7da; border-left-color: #dc3545;">
+                        <h4 style="color: #721c24;">⚠️ 降级建议</h4>
+                        <p><strong>小华</strong> 近期在液位控制和挂手柄步骤出现较多错误，建议暂时恢复 L2 辅助模式，并加强关键步骤训练。</p>
+                        <button class="btn btn-warning btn-small" style="margin-top: 10px;">确认降级</button>
+                    </div>
+                    <div class="description-box">
+                        <h4>📋 重点训练建议</h4>
+                        <p>本周训练重点：挂手柄技巧、液位感知能力</p>
+                        <h4 style="margin-top: 15px;">💡 步骤级别差异化</h4>
+                        <p>同一心青年在不同步骤可能处于不同能力水平，建议考虑：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>压粉：L4（基本独立）</li>
+                            <li>挂手柄：L2（需要较多辅助）</li>
+                            <li>布粉：L3（半独立）</li>
+                        </ul>
+                    </div>
+                `;
+                content.innerHTML = html;
+            }
+        }
+
+        function selectScene(scene) {
+            if (!scenes[scene]) {
+                alert('该场景为远期扩展功能，敬请期待！');
+                return;
+            }
+            currentScene = scene;
+            showPage('levelSelect');
+        }
+
+        function selectLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.level-option').forEach(opt => opt.classList.remove('selected'));
+            event.target.closest('.level-option').classList.add('selected');
+            startTraining();
+        }
+
+        function startTraining() {
+            currentStep = 0;
+            completedSteps.clear();
+            skippedSteps.clear();
+            stepSeconds = 0;
+            timeoutShown = false;
+            interventionHistory = [];
+            trainingData = {
+                startTime: new Date(),
+                stepStartTime: new Date(),
+                steps: [],
+                interventions: 0,
+                errors: 0,
+                trainingDate: new Date().toISOString().split('T')[0],
+                sessionHistory: []
+            };
+            document.getElementById('sceneTitle').textContent = scenes[currentScene].name;
+            document.getElementById('totalSteps').textContent = scenes[currentScene].steps.length;
+            document.getElementById('currentLevelBadge').textContent = 'L' + currentLevel;
+            document.getElementById('currentLevelBadge').className = 'level-badge level-L' + currentLevel;
+            showPage('steps');
+            renderStep();
+            startStepTimer();
+        }
+
+        function startStepTimer() {
+            if (stepTimerInterval) {
+                clearInterval(stepTimerInterval);
+            }
+            stepSeconds = 0;
+            timeoutShown = false;
+            document.getElementById('stepTimer').textContent = '0';
+            document.getElementById('timeoutAlert').style.display = 'none';
+            trainingData.stepStartTime = new Date();
+            stepTimerInterval = setInterval(() => {
+                stepSeconds++;
+                document.getElementById('stepTimer').textContent = stepSeconds;
+                if (stepSeconds >= 180 && !timeoutShown) {
+                    timeoutShown = true;
+                    document.getElementById('timeoutAlert').style.display = 'block';
+                    speakText('已经3分钟了，建议老师关注一下');
+                }
+            }, 1000);
+        }
+
+        function renderStep() {
+            const steps = scenes[currentScene].steps;
+            const step = steps[currentStep];
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentStepNum').textContent = currentStep + 1;
+            const effectiveLevel = step.stepLevel || currentLevel;
+            const content = document.getElementById('stepContent');
+            let stepLevelHtml = '';
+            if (step.stepLevel) {
+                stepLevelHtml = `<span class="step-level-badge level-L${step.stepLevel}">本步骤 L${step.stepLevel}</span>`;
+            }
+            let riskLevelClass = '';
+            if (step.riskLevel === '高') riskLevelClass = 'risk-high';
+            else if (step.riskLevel === '中') riskLevelClass = 'risk-medium';
+            let html = `
+                <div class="step-card">
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div class="step-number">${step.num}</div>
+                        ${stepLevelHtml}
+                    </div>
+                    ${step.phase ? `<p style="color: #667eea; font-size: 14px; margin: 5px 0;">📋 ${step.phase}</p>` : ''}
+                    <div class="step-image">${step.icon}</div>
+                    <div class="step-text">${step.easyText}</div>
+            `;
+            if (step.safety) {
+                html += `<div class="safety-alert"><strong>${step.safety}</strong></div>`;
+            }
+            html += `
+                <div class="step-details">
+            `;
+            if (step.duration) {
+                html += `<div class="detail-item"><span class="detail-label">⏱️ 时间：</span><span>${step.duration}</span></div>`;
+            }
+            if (step.tool) {
+                html += `<div class="detail-item"><span class="detail-label">🔧 工具：</span><span>${step.tool}</span></div>`;
+            }
+            if (step.riskLevel) {
+                html += `<div class="detail-item ${riskLevelClass}"><span class="detail-label">⚠️ 风险：</span><span>${step.riskLevel}</span></div>`;
+            }
+            html += `</div>`;
+            if (step.qualityOk) {
+                html += `
+                    <div class="quality-standards">
+                        <p style="font-weight: bold; color: #28a745; margin-bottom: 5px;">✅ 合格标准：${step.qualityOk}</p>
+                    </div>
+                `;
+            }
+            if (step.prevention) {
+                html += `
+                    <div class="prevention-tip">
+                        <p style="font-weight: bold; color: #856404; margin-bottom: 5px;">💡 预防措施：${step.prevention}</p>
+                    </div>
+                `;
+            }
+            if (effectiveLevel <= 3) {
+                html += `
+                    <div class="center-buttons">
+                        <button class="btn btn-voice" onclick="speakText('${step.voice || step.text}')">🔊 听语音</button>
+                        <button class="btn btn-repeat" onclick="repeatStep()">🔄 再说一遍</button>
+                    </div>
+                `;
+            }
+            if (effectiveLevel <= 1) {
+                html += `
+                    <div class="center-buttons" style="margin-top: 15px;">
+                        <button class="btn btn-help" onclick="requestHelp()">🆘 请老师帮忙</button>
+                    </div>
+                `;
+            }
+            html += `
+                    <div class="center-buttons" style="margin-top: 20px;">
+                        <button class="btn btn-complete" onclick="completeStep()">✅ 我完成了</button>
+                    </div>
+                </div>
+            `;
+            if (currentScene === 'makeCoffee' && currentStep === 11) {
+                html += `
+                    <div class="center-buttons" style="margin-top: 15px;">
+                        <button class="btn btn-secondary" onclick="showPage('liquidDetection')">💧 液位检测（演示）</button>
+                    </div>
+                `;
+            }
+            content.innerHTML = html;
+            document.getElementById('prevBtn').style.display = currentStep > 0 ? 'inline-block' : 'none';
+            if (effectiveLevel <= 2) {
+                setTimeout(() => {
+                    speakText(step.voice || step.text);
+                }, 500);
+            }
+        }
+
+        function completeStep() {
+            const stepDuration = stepSeconds;
+            const stepData = {
+                step: currentStep + 1,
+                time: new Date(),
+                duration: stepDuration,
+                completed: true,
+                skipped: false
+            };
+            trainingData.steps.push(stepData);
+            completedSteps.add(currentStep);
+            if (currentStep < scenes[currentScene].steps.length - 1) {
+                currentStep++;
+                renderStep();
+                startStepTimer();
+            } else {
+                finishTraining();
+            }
+        }
+
+        function skipStep() {
+            const stepDuration = stepSeconds;
+            const stepData = {
+                step: currentStep + 1,
+                time: new Date(),
+                duration: stepDuration,
+                completed: false,
+                skipped: true
+            };
+            trainingData.steps.push(stepData);
+            skippedSteps.add(currentStep);
+            speakText('已跳过此步骤，我们继续下一步。');
+            if (currentStep < scenes[currentScene].steps.length - 1) {
+                currentStep++;
+                renderStep();
+                startStepTimer();
+            } else {
+                finishTraining();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+                startStepTimer();
+            }
+        }
+
+        function finishTraining() {
+            if (stepTimerInterval) {
+                clearInterval(stepTimerInterval);
+            }
+            const duration = Math.round((new Date() - trainingData.startTime) / 1000 / 60);
+            const successRate = Math.round((completedSteps.size / scenes[currentScene].steps.length) * 100);
+            let summary = `
+                <div class="description-box">
+                    <h3>📊 训练总结</h3>
+                    <p><strong>训练日期：</strong>${trainingData.trainingDate}</p>
+                    <p><strong>完成时间：</strong>${duration} 分钟</p>
+                    <p><strong>完成率：</strong>${successRate}%</p>
+                    <p><strong>完成步骤：</strong>${completedSteps.size} / ${scenes[currentScene].steps.length}</p>
+                    <p><strong>跳过步骤：</strong>${skippedSteps.size}</p>
+                    <p><strong>老师干预：</strong>${trainingData.interventions} 次</p>
+                    <p><strong>错误次数：</strong>${trainingData.errors} 次</p>
+                </div>
+            `;
+            if (interventionHistory.length > 0) {
+                summary += `
+                    <div class="description-box" style="background: #fff3cd;">
+                        <h3>📝 干预记录</h3>
+                        ${interventionHistory.map(r => `<p>• ${r.type} (步骤 ${r.step})</p>`).join('')}
+                    </div>
+                `;
+            }
+            if (successRate === 100 && trainingData.interventions <= 2) {
+                summary += `
+                    <div class="description-box" style="background: #d4edda; border-left-color: #28a745;">
+                        <h4 style="color: #155724;">🎉 太棒了！表现优秀！</h4>
+                        <p>建议：可以尝试更高的独立等级训练！</p>
+                    </div>
+                `;
+            }
+            document.getElementById('trainingSummary').innerHTML = summary;
+            showPage('complete');
+        }
+
+        function testGoHome() {
+            console.log('testGoHome被调用');
+            alert('测试返回首页！');
+            
+            // 最简单直接的方法
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const homePage = document.getElementById('home');
+            if (homePage) {
+                homePage.classList.add('active');
+                console.log('已切换到home');
+            }
+        }
+
+        function resetTraining() {
+            // 清理所有定时器
+            if (stepTimerInterval) {
+                clearInterval(stepTimerInterval);
+                stepTimerInterval = null;
+            }
+            // 清理语音
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            startTraining();
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = currentLevel <= 2 ? 0.7 : 0.85;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function repeatStep() {
+            const step = scenes[currentScene].steps[currentStep];
+            speakText(step.voice || step.text);
+        }
+
+        function requestHelp() {
+            trainingData.interventions++;
+            interventionHistory.push({
+                type: '学员主动求助',
+                step: currentStep + 1,
+                time: new Date().toLocaleTimeString()
+            });
+            speakText('没关系，请老师来帮帮你。');
+            alert('🆘 老师已被提醒，请稍等！');
+        }
+
+        function recordIntervention() {
+            trainingData.interventions++;
+            interventionHistory.push({
+                type: '老师主动干预',
+                step: currentStep + 1,
+                time: new Date().toLocaleTimeString()
+            });
+            speakText('已记录老师干预');
+            alert('✅ 已记录老师干预！');
+        }
+
+        function startVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'zh-CN';
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    handleVoiceCommand(transcript);
+                };
+                recognition.onerror = function(event) {
+                    alert('语音识别遇到问题，请使用下方的语音快捷按钮！');
+                };
+                recognition.start();
+            } else {
+                alert('您的浏览器不支持语音功能，请使用下方的语音快捷按钮！');
+            }
+        }
+
+        function handleVoiceButton(command) {
+            switch(command) {
+                case 'next':
+                    speakText('现在我们正在做步骤 ' + (currentStep + 1));
+                    const step = scenes[currentScene].steps[currentStep];
+                    speakText(step.voice || step.text);
+                    break;
+                case 'repeat':
+                    repeatStep();
+                    break;
+                case 'cant':
+                    speakText('没关系，我们慢一点。你可以先看看图片，或者请老师帮忙。');
+                    trainingData.interventions++;
+                    interventionHistory.push({
+                        type: '学员表示不会',
+                        step: currentStep + 1,
+                        time: new Date().toLocaleTimeString()
+                    });
+                    break;
+                case 'help':
+                    requestHelp();
+                    break;
+            }
+        }
+
+        function handleVoiceCommand(command) {
+            command = command.toLowerCase();
+            if (command.includes('什么') || command.includes('下一步') || command.includes('该做')) {
+                const step = scenes[currentScene].steps[currentStep];
+                speakText(step.voice || step.text);
+            } else if (command.includes('不会') || command.includes('不懂')) {
+                speakText('没关系，我们慢一点。你可以先看看图片，或者请老师帮忙。');
+                trainingData.interventions++;
+                interventionHistory.push({
+                    type: '学员表示不会',
+                    step: currentStep + 1,
+                    time: new Date().toLocaleTimeString()
+                });
+            } else if (command.includes('帮助') || command.includes('帮忙')) {
+                requestHelp();
+            } else {
+                speakText('我没有听清楚，你可以点击屏幕上的按钮，或者请老师帮忙。');
+            }
+        }
+
+        function simulateLiquid() {
+            liquidLevel = Math.min(100, liquidLevel + 10);
+            document.getElementById('liquidLevel').style.height = liquidLevel + '%';
+            if (liquidLevel >= 70) {
+                speakText('水快满了！小心！');
+            }
+            if (liquidLevel >= 100) {
+                speakText('已经满了！快停止！');
+            }
+        }
+
+        function resetLiquid() {
+            liquidLevel = 0;
+            document.getElementById('liquidLevel').style.height = '0%';
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            const newLevel = prompt(`请为 ${student.name} 设置新的等级 (1-5)：`, student.level);
+            if (newLevel && newLevel >= 1 && newLevel <= 5) {
+                student.level = parseInt(newLevel);
+                renderTeacherContent('students');
+                alert(`${student.name} 的等级已更新为 L${newLevel}`);
+            }
+        }
+
+        function viewStudent(id) {
+            alert('查看学员详细训练记录（功能开发中）');
+        }
+
+        function viewInterventions(id) {
+            alert('查看干预详细记录（功能开发中）');
+        }
+
+        showPage('home');
+    </script>
+</body>
+</html>
