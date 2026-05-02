@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "openapi": [
+      "wx.invokeCloudFunction"
+    ]
+  },
+  "cloudfunctionRoot": "cloudfunctions/",
+  "env": "your-env-id"
+}

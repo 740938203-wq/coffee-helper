@@ -1,0 +1,25 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/sceneSelect/sceneSelect",
+    "pages/levelSelect/levelSelect",
+    "pages/steps/steps",
+    "pages/complete/complete",
+    "pages/assessment/assessment",
+    "pages/teacher/teacher",
+    "pages/dashboard/dashboard",
+    "pages/liquidDetection/liquidDetection",
+    "pages/login/login",
+    "pages/teacherLogin/teacherLogin",
+    "pages/studentDetail/studentDetail"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#667eea",
+    "navigationBarTitleText": "心青年咖啡助手",
+    "navigationBarTextStyle": "white"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

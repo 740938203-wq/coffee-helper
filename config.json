@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "envVariables": {
+    "TENCENT_SECRET_ID": "",
+    "TENCENT_SECRET_KEY": ""
+  }
+}
